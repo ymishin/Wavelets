@@ -15,19 +15,24 @@ eps = 1e-3;
 nx = M*2^(jmax-1)+1;
 xvec = linspace(-0.5,0.5,nx);
 fvec = cos(80*pi*xvec).*exp(-64*xvec.^2);
+enorm = max(fvec) - min(fvec);
+eps = eps * enorm; % normalize
 
 % perform forward transform
 fvec1 = forward_transform(xvec, fvec, jmax, jmin, porder);
 
-% get rid of values below eps
-fvec1(find(abs(fvec1) < eps)) = 0;
+% compress - get rid of d-coefficients below eps
+fvec1 = compress(fvec1, jmax, jmin, eps);
 
 % perform inverse transform
 fvec2 = inverse_transform(xvec, fvec1, jmax, jmin, porder);
 
-% compute max error
+% max error and compression ratio
 err = max(abs(fvec - fvec2));
+err = err / enorm; % normalize
 disp(err);
+comp_ratio = 100 * (1.0 - nnz(fvec1) / nnz(fvec));
+disp(comp_ratio);
 
 % plot
 figure;
@@ -51,12 +56,8 @@ for j = jmax:-1:(jmin+1)
 end
 % plot c coefficients at lowest level
 for i = 1:2*s:nx
-    plot(xvec(i), jmin, 'o', 'MarkerEdgeColor', 'b', 'MarkerSize', 5);
-    if (abs(fvec1(i)) > 0)
-        % fill in if value > 0
-        plot(xvec(i), jmin, 'o', 'MarkerEdgeColor', 'b', 'MarkerSize', 5, ...
-            'MarkerFaceColor', 'b');
-    end
+    plot(xvec(i), jmin, 'o', 'MarkerEdgeColor', 'b', 'MarkerSize', 5, ...
+        'MarkerFaceColor', 'b');
 end
 hold off;
 

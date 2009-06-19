@@ -20,19 +20,24 @@ yvec = linspace(-0.5,0.5,ny);
 [X Y] = meshgrid(xvec,yvec);
 A = 1.0; sigmax = 0.07; sigmay = 0.07;
 fmat = A * exp(-0.5*(X.^2/sigmax^2 + Y.^2/sigmay^2)); % gaussian
+enorm = max(fmat(:)) - min(fmat(:));
+eps = eps * enorm;  % normalize
 
 % perform forward transform
 fmat1 = forward_transform_2d(xvec, yvec, fmat, jmax, jmin, porder);
 
-% get rid of values below eps
-fmat1(find(abs(fmat1) < eps)) = 0;
+% compress - get rid of d-coefficients below eps
+fmat1 = compress_2d(fmat1, jmax, jmin, eps);
 
 % perform inverse transform
 fmat2 = inverse_transform_2d(xvec, yvec, fmat1, jmax, jmin, porder);
 
-% compute max error
-err = max(max(abs(fmat - fmat2)));
+% max error and compression ratio
+err = max(abs(fmat(:) - fmat2(:)));
+err = err / enorm; % normalize
 disp(err);
+comp_ratio = 100 * (1.0 - nnz(fmat1) / nnz(fmat));
+disp(comp_ratio);
 
 % plot
 figure;
@@ -69,19 +74,15 @@ for j = jmax:-1:(jmin+1)
     end
     hold off;
 end
-% plot c coefficients at lowest level
 figure;
 hold on;
 % plot all sample points
 plot(X(:), Y(:), 'o', 'MarkerEdgeColor', 'k', 'MarkerSize', 3);
+% plot c coefficients at lowest level
 for iy = 1:2*s:ny
     for ix = 1:2*s:nx
-        plot(xvec(ix), yvec(iy), 'o', 'MarkerEdgeColor', 'b', 'MarkerSize', 5);
-        if (abs(fmat1(iy,ix)) > 0)
-            % fill in if value > 0
-            plot(xvec(ix), yvec(iy), 'o', 'MarkerEdgeColor', 'b', ...
-                'MarkerSize', 5, 'MarkerFaceColor', 'b');
-        end
+        plot(xvec(ix), yvec(iy), 'o', 'MarkerEdgeColor', 'b', ...
+            'MarkerSize', 5, 'MarkerFaceColor', 'b');
     end
 end
 hold off;
