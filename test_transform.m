@@ -19,7 +19,7 @@ enorm = max(fvec) - min(fvec);
 eps = eps * enorm; % normalize
 
 % perform forward transform
-fvec1 = forward_transform(xvec, fvec, jmax, jmin, porder);
+fvec1 = forward_transform(xvec, fvec, jmax, jmin, porder, -1);
 
 % compress - get rid of d-coefficients below eps
 fvec1 = compress(fvec1, jmax, jmin, eps);

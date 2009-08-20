@@ -24,7 +24,7 @@ enorm = max(fmat(:)) - min(fmat(:));
 eps = eps * enorm;  % normalize
 
 % perform forward transform
-fmat1 = forward_transform_2d(xvec, yvec, fmat, jmax, jmin, porder);
+fmat1 = forward_transform_2d(xvec, yvec, fmat, jmax, jmin, porder, -1);
 
 % compress - get rid of d-coefficients below eps
 fmat1 = compress_2d(fmat1, jmax, jmin, eps);
