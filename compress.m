@@ -2,6 +2,8 @@ function fvec = compress(fvec, jmax, jmin, eps)
 % Compress 1D field given by {fvec} which underwent forward transform from
 % level {jmax} to level {jmin}. As the result of compression all d-coefficients
 % at all levels below {eps} are zeroized.
+%
+% $Id$
 
 if (eps < 0)
     return;

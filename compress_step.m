@@ -1,6 +1,8 @@
 function fvec = compress_step(fvec, s, eps)
 % Compress 1D field given by {fvec} at one level. As the result of compression
 % all d-coefficients at positions with step {s} below {eps} are zeroized.
+%
+% $Id$
 
 nx = length(fvec);
 

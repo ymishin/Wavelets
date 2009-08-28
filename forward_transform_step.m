@@ -3,6 +3,8 @@ function fvec = forward_transform_step(xvec, fvec, s, porder, mask)
 % by values {fvec} at points {xvec}. Only values at positions with step {s}
 % and marked by mask {mask} are considered. Array {porder} determines
 % polynomial order of transform.
+%
+% $Id$
 
 p_po = porder(1); % predict polynomial order
 u_po = porder(2); % update polynomial order

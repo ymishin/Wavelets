@@ -6,6 +6,8 @@ function fvec = inverse_transform_2d(xvec, yvec, fvec, jmax, jmin, porder)
 % Array {porder} determines polynomial order of transform:
 % [p_po - order for predict stage
 %  u_po - order for update stage]
+%
+% $Id$
 
 % loop over levels
 for j = (jmin+1):1:jmax

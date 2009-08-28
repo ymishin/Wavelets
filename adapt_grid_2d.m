@@ -12,6 +12,8 @@ function mask = adapt_grid_2d(fmat, jmax, jmin, porder, eps)
 % For details see: 
 % O.V.Vasilyev and C.Bowman, "Second Generation Wavelet Collocation Method for 
 % the Solution of Partial Differential Equations",J.Comp.Phys.,165,660-693,2000.
+%
+% $Id$
 
 p_po = porder(1); % predict polynomial order
 

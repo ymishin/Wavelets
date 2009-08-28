@@ -7,6 +7,8 @@ function fvec = forward_transform(xvec, fvec, jmax, jmin, porder, mask)
 % polynomial order of transform:
 % [p_po - order for predict stage
 %  u_po - order for update stage]
+%
+% $Id$
 
 % check mask
 if (mask == -1)

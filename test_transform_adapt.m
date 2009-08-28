@@ -1,4 +1,6 @@
 function test_transform_adapt
+%
+% $Id$
 
 close all;
 clear all;

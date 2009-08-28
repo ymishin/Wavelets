@@ -3,6 +3,8 @@ function f = lagrange_interp(x, xvec, fvec)
 % is built to have values {fvec} at points {xvec}, and value of this
 % polynomial at point {x} is returned. Polynomial order is (length(xvec)-1).
 % see e.g. E.Kreyszig "Advanced Engineering Mathematics, 9th Ed."
+%
+% $Id$
 
 nx = length(xvec);
 f = 0;

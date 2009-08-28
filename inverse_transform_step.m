@@ -2,6 +2,8 @@ function fvec = inverse_transform_step(xvec, fvec, s, porder)
 % Inverse interpolating wavelet transform is performed on 1D field given
 % by values {fvec} at points {xvec}. Only values at positions with step {s}
 % are considered. Array {porder} determines polynomial order of transform.
+%
+% $Id$
 
 p_po = porder(1); % predict polynomial order
 u_po = porder(2); % update polynomial order
