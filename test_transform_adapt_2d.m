@@ -23,7 +23,7 @@ yvec = linspace(-0.5,0.5,ny);
 A = 1.0; sigma = 0.07; dsigma = 0.05;
 fmat = A * exp(-0.5*(X.^2/sigma^2 + Y.^2/sigma^2)); % gaussian
 fmatp = fmat;
-enorm = max(fmat(:)) - min(fmat(:));
+enorm = abs(max(fmat(:)) - min(fmat(:)));
 eps = eps * enorm; % normalize
 mask = ones(ny,nx); % initially all nodes are marked by mask
 
@@ -33,7 +33,8 @@ for k = 1:2
     fmat1 = forward_transform_2d(xvec, yvec, fmat, jmax, jmin, porder, mask);
     
     % build adapted grid
-    mask = adapt_grid_2d(fmat1, jmax, jmin, porder, eps);
+    is_balanced = false;
+    mask = adapt_grid_2d(fmat1, jmax, jmin, porder, is_balanced, eps);
     
     % plot
     figure;

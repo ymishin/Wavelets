@@ -17,7 +17,7 @@ eps = 1e-3;
 nx = M*2^(jmax-1)+1;
 xvec = linspace(-0.5,0.5,nx);
 fvec = cos(80*pi*xvec).*exp(-64*xvec.^2);
-enorm = max(fvec) - min(fvec);
+enorm = abs(max(fvec) - min(fvec));
 eps = eps * enorm; % normalize
 
 % perform forward transform

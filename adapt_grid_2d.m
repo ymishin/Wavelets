@@ -1,10 +1,11 @@
-function mask = adapt_grid_2d(fmat, jmax, jmin, porder, eps)
+function mask = adapt_grid_2d(fmat, jmax, jmin, porder, balanced, eps)
 % Grid adaptation is performed for 2D field given by values {fmat}, which was 
 % previously transformed from level {jmax} to level {jmin}. The new adapted 
 % grid is returned via {mask} and contains: significant nodes (as prescribed 
 % by {eps}), adjacent to significant nodes, nodes at all levels which are 
 % necessary to compute these significant and adjacent nodes (reconstruction 
 % check criterion), and all nodes at coarsest level (c-coefficients).
+% If {balanced} is true then additional nodes will be added to balance the grid.
 % Array {porder} determines polynomial order of transform:
 % [p_po - order for predict stage
 %  u_po - order for update stage]
@@ -112,9 +113,29 @@ for j = jmax:-1:(jmin+1)
     % step
     s = 2^(jmax-j);
     
-    % loop over d-coefficients on X-slices
-    for iy = 1:s:ny
-        for ix = (s+1):2*s:nx
+    % loop over d-coefficients at cells' centers
+    for iy = (1+s):2*s:(ny-s)
+        for ix = (1+s):2*s:(nx-s)
+            % check if current node is in the mask
+            if (~mask(iy,ix))
+                continue;
+            end
+            % add to the mask nodes which are
+            % necessary to compute current d-coefficient
+            Lx = max(1,ix-p_po*s);
+            Rx = min(Lx+2*p_po*s,nx);
+            Lx = max(1,Rx-2*p_po*s);
+            mask(iy,Lx:2*s:Rx) = true;
+            Ly = max(1,iy-p_po*s);
+            Ry = min(Ly+2*p_po*s,ny);
+            Ly = max(1,Ry-2*p_po*s);
+            mask(Ly:2*s:Ry,ix) = true;
+        end
+    end
+    
+    % loop over d-coefficients at cells' edges on X-slices
+    for iy = 1:2*s:ny
+        for ix = (1+s):2*s:(nx-s)
             % check if current node is in the mask
             if (~mask(iy,ix))
                 continue;
@@ -125,12 +146,19 @@ for j = jmax:-1:(jmin+1)
             R = min(L+2*p_po*s,nx);
             L = max(1,R-2*p_po*s);
             mask(iy,L:2*s:R) = true;
+            % add nodes at lower level to balance the grid
+            if (balanced && (iy > 1) && (iy < ny))
+                mask(iy-2*s,ix-s) = true;
+                mask(iy-2*s,ix+s) = true;
+                mask(iy+2*s,ix-s) = true;
+                mask(iy+2*s,ix+s) = true;
+            end
         end
     end
     
-    % loop over d-coefficients on Y-slices
-    for ix = 1:s:nx
-        for iy = (s+1):2*s:ny
+    % loop over d-coefficients at cells' edges on Y-slices
+    for ix = 1:2*s:nx
+        for iy = (1+s):2*s:(ny-s)
             % check if current node is in the mask
             if (~mask(iy,ix))
                 continue;
@@ -141,6 +169,14 @@ for j = jmax:-1:(jmin+1)
             R = min(L+2*p_po*s,ny);
             L = max(1,R-2*p_po*s);
             mask(L:2*s:R,ix) = true;
+            % add nodes at lower level to balance the grid
+            if (balanced && (ix > 1) && (ix < nx))
+                mask(iy-s,ix-2*s) = true;
+                mask(iy-s,ix+2*s) = true;
+                mask(iy+s,ix-2*s) = true;
+                mask(iy+s,ix+2*s) = true;
+                
+            end
         end
     end
     

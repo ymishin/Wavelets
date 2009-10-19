@@ -19,7 +19,7 @@ xvec = linspace(-0.5,0.5,nx);
 x0 = -0.3; v = 1; t = 0; dt = 0.05; nu = 1e-2;
 fvec = -tanh((xvec - x0 - v * t) ./ (2 * nu));
 fvecp = fvec;
-enorm = max(fvec) - min(fvec);
+enorm = abs(max(fvec) - min(fvec));
 eps = eps * enorm; % normalize
 mask = ones(nx,1); % initially all nodes are marked by mask
 

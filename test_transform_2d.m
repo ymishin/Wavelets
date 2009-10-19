@@ -22,7 +22,7 @@ yvec = linspace(-0.5,0.5,ny);
 [X Y] = meshgrid(xvec,yvec);
 A = 1.0; sigmax = 0.07; sigmay = 0.07;
 fmat = A * exp(-0.5*(X.^2/sigmax^2 + Y.^2/sigmay^2)); % gaussian
-enorm = max(fmat(:)) - min(fmat(:));
+enorm = abs(max(fmat(:)) - min(fmat(:)));
 eps = eps * enorm;  % normalize
 
 % perform forward transform
